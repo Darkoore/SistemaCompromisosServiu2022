@@ -2,7 +2,7 @@
 Repositorio con todos los archivos relevantes para el proyecto
 
 ### Script base de datos y flat files
-
+dentro de carpeta "Base de datos"
 
 
 ### Links de interés
