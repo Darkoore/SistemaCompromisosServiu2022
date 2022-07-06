@@ -1,11 +1,15 @@
 # SistemaCompromisosServiu2022
 Repositorio con todos los archivos relevantes para el proyecto
 
-### Script base de datos y flat files
-dentro de carpeta "Base de datos"
+### Script base de datos, flat files y Procedures
+dentro de carpeta "Diseño" y luego dentro de "Base de datos"
 
 
-### Links de interés
+
+
+
+
+### Links de tutorial github
 
 1. Instalar mvc5
 https://imgur.com/a/nTEzHyo
