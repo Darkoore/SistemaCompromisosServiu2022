@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewBag.Title = "Inicio";
+}
+
+<div class="container">
+    <div class="row d-flex justify-content-center pt-4">
+        <p class="font-level-1">Bienvenido</p>
+    </div>
+    <div class="row d-flex justify-content-center">
+        <p class="font-level-3">Favor elegir una opcion</p>
+    </div>
+    <div class="card-data-list">
+        <div class="card-data text-normal" onclick="location.href='@Url.Action("Actividad", "Home")'">
+            <div class="card-data-title">
+                <div class="card-data-quantity"></div>
+                <h5>Actividades</h5>
+            </div>
+            <p>Registra una actividad nueva</p>
+        </div>
+        <div class="card-data text-normal" onclick="location.href='@Url.Action("Registro", "Home")'">
+            <div class="card-data-title">
+                <div class="card-data-quantity"></div>
+                <h5>Registro</h5>
+
+            </div>
+            <p>Comprueba los registros de tus actividades previas</p>
+        </div>
+    </div>
+</div>
