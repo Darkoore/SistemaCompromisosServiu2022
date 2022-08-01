@@ -124,10 +124,13 @@
     </Compile>
     <Compile Include="Models\Actividad.cs" />
     <Compile Include="Models\CN_Actividad.cs" />
+    <Compile Include="Models\CN_Compromisos.cs" />
     <Compile Include="Models\CN_Funcionario.cs" />
     <Compile Include="Models\CN_Participantes.cs" />
+    <Compile Include="Models\Compromisos.cs" />
     <Compile Include="Models\ConexionBD.cs" />
     <Compile Include="Models\CRUD_Actividad.cs" />
+    <Compile Include="Models\CRUD_Compromisos.cs" />
     <Compile Include="Models\CRUD_Funcionario.cs" />
     <Compile Include="Models\CRUD_Participantes.cs" />
     <Compile Include="Models\Funcionario_test.cs" />
