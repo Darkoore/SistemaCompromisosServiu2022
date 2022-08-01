@@ -22,7 +22,7 @@ namespace CompromisoAlternativo.Models
             {
                 using (SqlConnection oconexion = new SqlConnection(ConexionBD.cn))
                 {
-                    SqlCommand cmd = new SqlCommand("PartLeer", oconexion);
+                    SqlCommand cmd = new SqlCommand("ParticipantesLeer", oconexion);
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.CommandType = CommandType.Text;
                     oconexion.Open();
@@ -69,7 +69,7 @@ namespace CompromisoAlternativo.Models
             {
                 using (SqlConnection oconexion = new SqlConnection(ConexionBD.cn))
                 {
-                    SqlCommand cmd = new SqlCommand("PartAñadir", oconexion);
+                    SqlCommand cmd = new SqlCommand("ParticipantesAñadir", oconexion);
                     
 
                     cmd.Parameters.AddWithValue("@PART_RUT", obj.PART_RUT);
@@ -104,7 +104,7 @@ namespace CompromisoAlternativo.Models
             {
                 using (SqlConnection oconexion = new SqlConnection(ConexionBD.cn))
                 {
-                    SqlCommand cmd = new SqlCommand("PartEditar", oconexion);
+                    SqlCommand cmd = new SqlCommand("ParticipantesEditar", oconexion);
                     cmd.Parameters.AddWithValue("@PART_ID", obj.PART_ID);
                     cmd.Parameters.AddWithValue("@PART_RUT", obj.PART_RUT);
                     cmd.Parameters.AddWithValue("@PART_NOMBRE", obj.PART_NOMBRE);
@@ -138,7 +138,8 @@ namespace CompromisoAlternativo.Models
             {
                 using (SqlConnection oconexion = new SqlConnection(ConexionBD.cn))
                 {
-                    SqlCommand cmd = new SqlCommand("delete top(1) from usuario where PART_ID = @id", oconexion);
+                    //SqlCommand cmd = new SqlCommand("delete top(1) from usuario where PART_ID = @id", oconexion);
+                    SqlCommand cmd = new SqlCommand("ParticipantesBorrar", oconexion);
                     cmd.Parameters.AddWithValue("@id", id);
                     cmd.CommandType = CommandType.Text;
                     oconexion.Open();

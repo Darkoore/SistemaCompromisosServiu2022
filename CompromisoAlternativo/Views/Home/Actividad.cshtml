@@ -75,7 +75,7 @@
 
                                 @*BOTON GUARDAR PARTICIPANTES*@
                                 <div class="modal-footer d-flex justify-content-center">
-                                    <button type="button" class="btn btn-outline-secondary" onclick="Guardar()">Registrar</button>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="GuardarParticipantes()">Registrar</button>
                                 </div>
                             </div>
                         </div>
@@ -83,9 +83,9 @@
                 </div>
 
 
-                <button type="button" class="btn btn-outline-tertiary col-4" data-toggle="modal" data-target="#modalFuncionariosform">Funcionarios</button>
+                <button type="button" class="btn btn-outline-tertiary col-4" data-toggle="modal" data-target="#modalFuncionarios">Funcionarios</button>
                 @*MODAL FUNCIONARIOS*@
-                <div class="modal fade" id="modalFuncionariosform" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal fade" id="modalFuncionarios" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header text-center">
@@ -114,7 +114,7 @@
 
 
         //DATATABLE #tablaParticipantes
-        <table id="tablaParticipantes" class="display cell-border pt-3" width="100%">
+        <table id="tablaParticipantes" class="display cell-border pt-3 " width="100%">
             <thead>
                 <tr>
                     <th>RUT</th>
@@ -166,7 +166,7 @@
         <div class="row pt-4">
             <label class="col" style="padding-top:18px;padding-bottom:18px;">Gestion de Compromisos</label>
             <div class="col-10 d-flex justify-content-center">
-                <button type="button" class="btn btn-outline-tertiary col-10" data-toggle="modal" data-target="#modalCompromisos">Añadir Compromiso</button>
+                <button type="button" class="btn btn-outline-tertiary col-10"  data-toggle="modal" data-target="#modalCompromisos">Añadir Compromiso</button>
             </div>
         </div>
 
@@ -207,6 +207,7 @@
                 </div>
             </div>
         </div>
+
         //DATATABLE #tablaCompromisos
         <table id="tablaCompromisos" class="display cell-border pt-3" width="100%">
             <thead>
@@ -272,7 +273,8 @@
             { "data": "PART_INSTITUCION" },
 
             {
-                "defaultContent": '<button type="button" class="btn btn-primary btn-sm btn-editar ">Editar</button>' + '<button type="button" class="btn btn-danger btn-sm ms-2 btn-eliminar">Borrar</button>',
+                "defaultContent": '<button type="button" class="btn btn-primary btn-sm btn-editar ">Editar</button>' +
+                                  '<button type="button" class="btn btn-danger btn-sm ms-2 btn-eliminar">Borrar</button>',
                 "orderable": false,
                 "searchable": false,
                 "width": "120px"
@@ -331,20 +333,63 @@
             var filaSeleccionadaParticipantes = $(this).closest("tr");
 
             var data = tablaDataParticipantes.row(filaSeleccionadaParticipantes).data();
-            console.log(data)
             abrirModalParticipantes(data)
         })
 
         $("#tablaParticipantes tbody").on("click", '.btn-eliminar', function () {
 
+            /*alert("Borrar")*/
+            var ParticipanteSeleccionado = $(this).closest("tr");
+
+            var data = tablaDataParticipantes.row(ParticipanteSeleccionado).data();
+
             alert("Borrar")
 
+            swal({
+                title: "Estas seguro?",
+                text: "Desea eliminar el participante?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-primary",
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+                closeOnConfirm: true
+            },
+            function () {
 
-            //link borrar data table https://datatables.net/reference/api/row().remove()
+                jQuery.ajax({
+
+                    url: '@Url.Action("EliminarParticipantes", "Home")',
+                    type: "POST",
+                    data: JSON.stringify({ id: data.PART_ID }),
+                    dataType: "json",
+                    contentType: "application/json; charset-utf-8",
+                    succes: function (data) {
+
+                        if (data.resultado) {
+
+                            tablaDataParticipantes.row(ParticipanteSeleccionado).remove().draw();
+                            alert("if")
+
+                        } else {
+
+                            swal("No se pudo eliminar.", data.mensaje, "error")
+                            alert("else")
+
+                        }
+                    },
+                    error: function (error) {
+                        alert("error")
+                    },
+
+                });
+
+            });
+
         })
 
 
-        function Guardar() {
+        function GuardarParticipantes() {
             //Crea objeto participante y transpasa datos de textbox
             var Participante = {
 
@@ -541,15 +586,43 @@
         })
 
         //GUARDAR COMPROMISOS
-        //function GuardarCompromisos() {
-        //    //Crea objeto participante y transpasa datos de textbox
-        //    var Compromiso = {
+        function GuardarCompromisos() {
+            //Crea objeto participante y transpasa datos de textbox
+            var Compromiso = {
 
-        //        /*PART_ID: $("#txtId").val(),*/
-        //        PART_RUT: $("#txtTarea").val(),
-        //        PART_NOMBRE: $("#txtPlazo").val(),
-        //        PART_FONO: $("#txtResponsable").val(),
-        //    }
+                PART_ID: $("#txtId").val(),
+                PART_RUT: $("#txtTarea").val(),
+                PART_NOMBRE: $("#txtPlazo").val(),
+                PART_FONO: $("#txtResponsable").val(),
+            }
+
+        jQuery.ajax({
+                url: '@Url.Action("CompromisosAñadir","Home")',
+                type: "POST",
+                data: JSON.stringify({objeto:Compromiso}),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+
+
+                    /*$("#txtIdCompromiso").val("0").change(),*/
+                    $("#txtIdCompromiso").val(""),
+                    $("#txtTarea").val(""),
+                    $("#txtPlazo").val(""),
+                    $("#txtResponsable").val("")
+                },
+                error: function (error) {
+                    console.log(error)
+
+                },
+                beforeSend: function () {
+
+                },
+            });
+
+            //$('#tabla').DataTable().ajax.reload();
+            //$("#modalParticipantes").modal("hide");
+        }
 
     </script>
 }

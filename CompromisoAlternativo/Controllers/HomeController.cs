@@ -78,6 +78,38 @@ namespace CompromisoAlternativo.Controllers
             return Json(new { data = olista }, JsonRequestBehavior.AllowGet);
         }
 
+        //AGREGAR Y EDITAR PARTICIPANTES EXTERNOS
+        [HttpPost]
+        public JsonResult PartAñadir(Participantes objeto)
+        {
+            object resultado;
+            string mensaje = string.Empty;
+
+            if (objeto.PART_ID == 0)
+            {
+                resultado = new CN_Participantes().PartAñadir(objeto, out mensaje);
+            }
+            else
+            {
+                resultado = new CN_Participantes().PartEditar(objeto, out mensaje);
+            }
+
+
+            return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+
+        //ELIMINAR PARTICIPANTES EXTERNOS
+        [HttpPost]
+        public JsonResult EliminarParticipantes(int id)
+        {
+            bool respuesta = false;
+            string mensaje = string.Empty;
+
+            respuesta = new CN_Participantes().PartEliminar(id, out mensaje);
+
+            return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);      
+        }
+
         //LISTAR COMPROMISOS
         [HttpGet]
         public JsonResult ListarCompromisos()
@@ -88,31 +120,30 @@ namespace CompromisoAlternativo.Controllers
 
             return Json(new { data = olista }, JsonRequestBehavior.AllowGet);
         }
-
-
-        //INTENTO DE AGREGAR PARTICIPANTES EXTERNOS
+        //AÑADIR COMPROMISO
         [HttpPost]
-        public JsonResult PartAñadir(Participantes objeto)
+        public JsonResult CompromisosAñadir(Compromisos objeto)
         {
             object resultado;
             string mensaje = string.Empty;
 
-          if(objeto.PART_ID == 0)
-            {
-                resultado = new CN_Participantes().PartAñadir(objeto, out mensaje);
-            }
-            else
-            {
-                resultado= new CN_Participantes().PartEditar(objeto, out mensaje);
-            }
-          
-               
-                return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+
+            resultado = new CN_Compromisos().CompromisosAñadir(objeto, out mensaje);
+
+            //if (objeto.ACTI_ID == 0)
+            //{
+            //    resultado = new CN_Actividad().ActiAñadir(objeto, out mensaje);
+            //}
+            //else
+            //{
+            //    resultado = new CN_Actividad().ActiEditar(objeto, out mensaje);
+            //}
+
+
+            return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
-
-
-
+        //LISTAR ACTVIDAD
         [HttpGet]
         public JsonResult ActiLeer()
         {
@@ -123,6 +154,7 @@ namespace CompromisoAlternativo.Controllers
             return Json(new { data = olista }, JsonRequestBehavior.AllowGet);
         }
 
+        //AÑADIR ACTIVIDAD
         [HttpPost]
         public JsonResult ActiAñadir(Actividad objeto)
         {
