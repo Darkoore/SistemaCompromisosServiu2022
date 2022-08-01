@@ -77,7 +77,19 @@ namespace CompromisoAlternativo.Controllers
 
             return Json(new { data = olista }, JsonRequestBehavior.AllowGet);
         }
-        //INTENTO DE AGREGAR PARTICIPANTES EXTERNOS
+
+        //LISTAR COMPROMISOS
+        [HttpGet]
+        public JsonResult ListarCompromisos()
+        {
+            List<Compromisos> olista = new List<Compromisos>();
+
+            olista = new CN_Compromisos().ListarCompromisos();
+
+            return Json(new { data = olista }, JsonRequestBehavior.AllowGet);
+        }
+
+        //AGREGAR PARTICIPANTES EXTERNOS
         [HttpPost]
         public JsonResult PartAñadir(Participantes objeto)
         {

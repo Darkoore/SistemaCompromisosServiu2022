@@ -84,7 +84,7 @@
 
                 <button type="button" class="btn btn-outline-tertiary col-4" data-toggle="modal" data-target="#modalFuncionariosform">Funcionarios</button>
                 @*MODAL FUNCIONARIOS*@
-                <div class="modal fade" id="modalFuncionariosform" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal fade" id="modalFuncionarios" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header text-center">
@@ -112,9 +112,9 @@
         </div>
 
 
-        //DATATABLE #tabla
+        //DATATABLE #tablaParticipantes
 
-        <table id="tabla" class="display cell-border pt-3" width="100%">
+        <table id="tablaParticipantes" class="display cell-border pt-3" width="100%">
             <thead>
                 <tr>
                     <th>RUT</th>
@@ -133,7 +133,7 @@
         <div class="row pt-4">
             <label class="col-2">Tipo de actividad</label>
             <div class="col-10 d-flex justify-content-center">
-                <select id ="selectActiId"  class="form-select col-10" aria-label="Default select example">
+                <select id="selectActiId" class="form-select col-10" aria-label="Default select example">
                     <option value="0" selected>Seleccione una actividad</option>
                     <option value="1">REUNION DIRECCION</option>
                     <option value="2">LEY LOBBY</option>
@@ -166,12 +166,12 @@
         <div class="row pt-4">
             <label class="col" style="padding-top:18px;padding-bottom:18px;">Gestion de Compromisos</label>
             <div class="col-10 d-flex justify-content-center">
-                <button type="button" class="btn btn-outline-tertiary col-10" data-toggle="modal" data-target="#modalCompromisosForm">Añadir Compromiso</button>
+                <button type="button" class="btn btn-outline-tertiary col-10" data-toggle="modal" data-target="#modalCompromisos">Añadir Compromiso</button>
             </div>
         </div>
-         
+
         //MODAL COMPROMISO
-        <div class="modal fade" id="modalCompromisosForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="modalCompromisos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header text-center">
@@ -208,7 +208,24 @@
             </div>
         </div>
 
-        //BOTON AÑADIR COMPROMISO
+        
+        //DATATABLE #tablaCompromisos
+        <table id="tablaCompromisos" class="display cell-border pt-3" width="100%">
+            <thead>
+                <tr>
+                    @*<th>ID COMPROMISO</th>*@
+                    <th>TAREA</th>
+                    <th>PLAZO</th>
+                    <th>RESPONSABLE</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+
+        //BOTON AÑADIR ACTIVIDAD
         <div class="row pt-4">
             <div class="col-12 d-flex justify-content-center">
                 <button type="button" class="btn btn-outline-primary col-4" onclick="GuardarActividad()">Añadir Actividad</button>
@@ -229,14 +246,14 @@
 
 @section scripts{
     <script>
-        var tabladata;
-        var filaSeleccionada;
-        var tablaacti;
+        var tablaDataParticipantes;
+        var filaSeleccionadaParticipantes;
+        var tablaActiParticipantes;
 
         //SE UTILIZA PLUGIN TABLADATA PARA OBTENER VALORES Y MOSTRARLOS
 
 
-        tabladata = $("#tabla").DataTable({
+        tablaDataParticipantes = $("#tablaParticipantes").DataTable({
         responsive: true,
         ordering: false,
         //implementa busqueda
@@ -274,7 +291,7 @@
 
         //BLANQUEO DE CAMPOS O TOMAR INFORMACION PRESENTE EN LA FILA Y LUEGO ABRIR MODAL
 
-        function abrirModal(json) {
+        function abrirModalParticipantes(json) {
 
             $("#txtId").val(0);
             //test = $("#txtId").val();
@@ -297,32 +314,31 @@
             $("#txtFono").val(json.PART_FONO);
             $("#txtEmail").val(json.PART_EMAIL);
             $("#txtInstitucion").val(json.PART_INSTITUCION);
-
             }
 
-
-         $("#modalParticipantes").modal("show");
+            $("#modalParticipantes").modal("show");
         }
+
        //VALIDACIONES VIA PLUGIN INPUTMASK
        //https://github.com/RobinHerbots/Inputmask
 
-        $("#txtRut").inputmask("99999999-*", {"placeholder":"12345678-9"});
-        $("#txtFono").inputmask("999999999", { "placeholder": "967054837" });
-        $("#txtEmail").inputmask("email").mask();
+        //$("#txtRut").inputmask("99999999-*", {"placeholder":"12345678-9"});
+        //$("#txtFono").inputmask("999999999", { "placeholder": "967054837" });
+        //$("#txtEmail").inputmask("email").mask();
 
 
 
         //Seleciona la fila en la que se dio click a editar y muestra la informacion de dicha fila
-        $("#tabla tbody").on("click", '.btn-editar', function () {
+        $("#tablaParticipantes tbody").on("click", '.btn-editar', function () {
+            alert("Hola")
+            var filaSeleccionadaParticipantes = $(this).closest("tr");
 
-            var filaSeleccionada = $(this).closest("tr");
-
-            var data = tabladata.row(filaSeleccionada).data();
+            var data = tablaDataParticipantes.row(filaSeleccionadaParticipantes).data();
             console.log(data)
-            abrirModal(data)
+            abrirModalParticipantes(data)
         })
 
-        $("#tabla tbody").on("click", '.btn-eliminar', function () {
+        $("#tablaParticipantes tbody").on("click", '.btn-eliminar', function () {
 
             alert("Borrar")
 
@@ -351,7 +367,7 @@
 
 
             // ajax envia objeto Participante y llama store procedure
-            
+
             //if ((Rut == '') || (Nombre == '') || (Institucion =='')) {
             //    alert("Rellene todos los campos")
             //}
@@ -360,7 +376,7 @@
 
             //}
             /*else {*/
-                  jQuery.ajax({
+                jQuery.ajax({
                 url: '@Url.Action("PartAñadir","Home")',
                 type: "POST",
                 data: JSON.stringify({objeto:Participante}),
@@ -368,12 +384,12 @@
                 contentType: "application/json; charset=utf-8",
                 success: function (data) {
 
-                    debugger;
+                    /*debugger;*/
                     if (Participante.PART_ID == 0) {
 
                         if (data.resultado != 0) {
                             Participante.PART_ID = data.resultado;
-                            tabladata.row.add(Participante).draw(false);
+                            tablaDataParticipantes.row.add(Participante).draw(false);
                             $("#modalParticipantes").modal("hide");
 
                         } else {
@@ -387,10 +403,10 @@
                         if (data.resultado) {
                             //filaSeleccionada retorna null por lo que siempre sobrescribe 0, se soluciona abajo refrescando tabla
 
-                            tabladata.row(filaSeleccionada).data(Participante).draw(false);
-                            filaSeleccionada = null;
+                            tablaDataParticipantes.row(filaSeleccionadaParticipantes).data(Participante).draw(false);
+                            filaSeleccionadaParticipantes = null;
                             $("#modalParticipantes").modal("hide");
-                            $('#tabla').DataTable().ajax.reload();
+                            $('#tablaParticipantes').DataTable().ajax.reload();
 
 
                         } else {
@@ -408,10 +424,7 @@
 
                 },
             });
-
-
-            }
-     /*   }*/
+        }
 
 
 
@@ -433,7 +446,7 @@
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 success: function (data) {
-                    
+
 
                     $("#actiId").val(""),
                     $("#selectActiId").val("0").change(),
@@ -454,6 +467,63 @@
         }
 
 
+
+        var tabladataCompromisos;
+        var filaSeleccionadaCompromisos;
+        var tablaactiCompromisos;
+
+        //SE UTILIZA PLUGIN TABLADATA PARA OBTENER VALORES Y MOSTRARLOS
+        tabladataCompromisos = $("#tablaCompromisos").DataTable({
+        responsive: true,
+        ordering: false,
+        bFilter: false,
+        paginate:true,
+
+            "ajax": {
+            url: '@Url.Action("ListarCompromisos", "Home")',
+            type: "GET",
+            dataType: "json"
+        },
+        "columns": [
+            { "data": "COMP_TAREA" },
+            { "data": "COMP_PLAZO"},
+            { "data": "COMP_FUNCIONARIO_RESP" },
+
+            {
+                "defaultContent": '<button type="button" class="btn btn-primary btn-sm btn-editar ">Editar</button>' + '<button type="button" class="btn btn-danger btn-sm ms-2 btn-eliminar">Borrar</button>',
+                "orderable": false,
+                "searchable": false,
+                "width": "120px"
+            }
+
+        ],
+        "language": {
+            "url": "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json"
+        }
+
+    });
+
+        //BLANQUEO DE CAMPOS O TOMAR INFORMACION PRESENTE EN LA FILA Y LUEGO ABRIR MODAL
+
+        function abrirModalCompromisos(json) {
+
+            $("#txtIdCompromiso").val(0);
+            $("#txtTarea").val("");
+            $("#txtPlazo").val("");
+            $("#txtResponsable").val("");
+
+            $("#mensajeError").hide();
+
+            if (json != null) {
+
+            $("#txtIdCompromiso").val(json.COMP_ID);
+            $("#txtTarea").val(json.COMP_TAREA);
+            $("#txtPlazo").val(json.COMP_PLAZO);
+            $("#txtResponsable").val(json.COMP_FUNCIONARIO_RESP);
+            }
+
+            $("#modalCompromisos").modal("show");
+        }
 
     </script>
 }
