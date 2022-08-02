@@ -166,7 +166,8 @@
         <div class="row pt-4">
             <label class="col" style="padding-top:18px;padding-bottom:18px;">Gestion de Compromisos</label>
             <div class="col-10 d-flex justify-content-center">
-                <button type="button" class="btn btn-outline-tertiary col-10"  data-toggle="modal" data-target="#modalCompromisos">Añadir Compromiso</button>
+                <button type="button" class="btn btn-outline-tertiary col-10" onclick="abrirModalCompromisos()">Añadir Compromiso</button>            
+                @*<button type="button" class="btn btn-outline-tertiary col-10"  data-toggle="modal" data-target="#modalCompromisos">Añadir Compromiso</button>*@
             </div>
         </div>
 
@@ -244,12 +245,14 @@
 @section scripts{
     <script>
     //-----------------------------------------------INICIO PARTICIPANTES----------------------------------------------
+        
         var tablaDataParticipantes;
         var filaSeleccionadaParticipantes;
-        /*var tablaActiParticipantes;*/
+        var tablaActivoParticipantes;
 
         //SE UTILIZA PLUGIN TABLADATA PARA OBTENER VALORES Y MOSTRARLOS
 
+        if (tablaActivoParticipantes != 1) { 
 
         tablaDataParticipantes = $("#tablaParticipantes").DataTable({
         responsive: true,
@@ -264,7 +267,7 @@
             "ajax": {
             url: '@Url.Action("ListarParticipantes", "Home")',
             type: "GET",
-            dataType: "json"
+            dataType: "json",
         },
         "columns": [
             { "data": "PART_RUT" },
@@ -287,6 +290,8 @@
             }
 
         });
+        }
+
 
         //BLANQUEO DE CAMPOS O TOMAR INFORMACION PRESENTE EN LA FILA Y LUEGO ABRIR MODAL
         function abrirModalParticipantes(json) {
@@ -341,16 +346,17 @@
         $("#tablaParticipantes tbody").on("click", '.btn-eliminar', function () {
 
             /*alert("Borrar")*/
-            tablaActivoParticipantes = 0;
+            /*tablaActivoParticipantes = 0;*/
 
             var tablaP = $(this).closest("tr");
 
-            if (tablaActivoParticipantes == 0) {
-                tablaP.remove();
-                tablaP.draw();
+            if (tablaActivoParticipantes == 1) {
+                alert('hola')
             }
             else {
-                alert("else")
+                tablaP.remove();
+                tablaP.draw();
+                tablaActivoParticipantes = 0;
             }
 
         })
@@ -393,7 +399,6 @@
                 contentType: "application/json; charset=utf-8",
                 success: function (data) {
 
-                    /*debugger;*/
                     if (Participante.PART_ID == 0) {
 
                         if (data.resultado != 0) {
@@ -436,6 +441,14 @@
         }
 
 //--------------------------------------------------------FIN PARTICIPANTES--------------------------------------------
+
+
+
+//-----------------------------------------------------INICIO FUNCIONARIOS---------------------------------------------
+
+
+
+//--------------------------------------------------------FIN FUNCIONARIOS---------------------------------------------
 
 
 
