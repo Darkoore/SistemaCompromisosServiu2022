@@ -243,9 +243,10 @@
 
 @section scripts{
     <script>
+    //-----------------------------------------------INICIO PARTICIPANTES----------------------------------------------
         var tablaDataParticipantes;
         var filaSeleccionadaParticipantes;
-        var tablaActiParticipantes;
+        /*var tablaActiParticipantes;*/
 
         //SE UTILIZA PLUGIN TABLADATA PARA OBTENER VALORES Y MOSTRARLOS
 
@@ -274,21 +275,20 @@
 
             {
                 "defaultContent": '<button type="button" class="btn btn-primary btn-sm btn-editar ">Editar</button>' +
-                                  '<button type="button" class="btn btn-danger btn-sm ms-2 btn-eliminar">Borrar</button>',
+                                  '<button type="button" class="btn btn-danger btn-sm ms-2 btn-eliminar" >Borrar</button>',
                 "orderable": false,
                 "searchable": false,
                 "width": "120px"
             }
 
         ],
-        "language": {
-            "url": "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json"
-        }
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json"
+            }
 
-    });
+        });
 
         //BLANQUEO DE CAMPOS O TOMAR INFORMACION PRESENTE EN LA FILA Y LUEGO ABRIR MODAL
-
         function abrirModalParticipantes(json) {
 
             $("#txtId").val(0);
@@ -318,16 +318,16 @@
 
          $("#modalParticipantes").modal("show");
         }
+
        //VALIDACIONES VIA PLUGIN INPUTMASK
        //https://github.com/RobinHerbots/Inputmask
+        $("#tablaParticipantes").ready(function () {
+            $("#txtRut").inputmask("99999999-*", { "placeholder": "12345678-9" });
+            $("#txtFono").inputmask("999999999", { "placeholder": "967054837" });
+            $("#txtEmail").inputmask("email").mask();
+        });
 
-        //$("#txtRut").inputmask("99999999-*", {"placeholder":"12345678-9"});
-        //$("#txtFono").inputmask("999999999", { "placeholder": "967054837" });
-        //$("#txtEmail").inputmask("email").mask();
-
-
-
-        //Seleciona la fila en la que se dio click a editar y muestra la informacion de dicha fila
+        //SELECCIONA FILA Y ABRE MODAL PARA EDITAR
         $("#tablaParticipantes tbody").on("click", '.btn-editar', function () {
 
             var filaSeleccionadaParticipantes = $(this).closest("tr");
@@ -336,55 +336,22 @@
             abrirModalParticipantes(data)
         })
 
+        //SELECCIONA FILA Y ABRE MODAL PARA ELIMINAR VISUALMENTE
+        var tablaP = $('#tablaParticipantes').DataTable();
         $("#tablaParticipantes tbody").on("click", '.btn-eliminar', function () {
 
             /*alert("Borrar")*/
-            var ParticipanteSeleccionado = $(this).closest("tr");
+            tablaActivoParticipantes = 0;
 
-            var data = tablaDataParticipantes.row(ParticipanteSeleccionado).data();
+            var tablaP = $(this).closest("tr");
 
-            alert("Borrar")
-
-            swal({
-                title: "Estas seguro?",
-                text: "Desea eliminar el participante?",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonClass: "btn-primary",
-                confirmButtonText: "Si",
-                cancelButtonText: "No",
-                closeOnConfirm: true
-            },
-            function () {
-
-                jQuery.ajax({
-
-                    url: '@Url.Action("EliminarParticipantes", "Home")',
-                    type: "POST",
-                    data: JSON.stringify({ id: data.PART_ID }),
-                    dataType: "json",
-                    contentType: "application/json; charset-utf-8",
-                    succes: function (data) {
-
-                        if (data.resultado) {
-
-                            tablaDataParticipantes.row(ParticipanteSeleccionado).remove().draw();
-                            alert("if")
-
-                        } else {
-
-                            swal("No se pudo eliminar.", data.mensaje, "error")
-                            alert("else")
-
-                        }
-                    },
-                    error: function (error) {
-                        alert("error")
-                    },
-
-                });
-
-            });
+            if (tablaActivoParticipantes == 0) {
+                tablaP.remove();
+                tablaP.draw();
+            }
+            else {
+                alert("else")
+            }
 
         })
 
@@ -398,7 +365,7 @@
                 PART_NOMBRE: $("#txtNombre").val(),
                 PART_FONO: $("#txtFono").val(),
                 PART_EMAIL: $("#txtEmail").val(),
-                PART_INSTITUCION: $("#txtInstitucion").val(),
+                PART_INSTITUCION: $("#txtInstitucion").val()
 
             }
 
@@ -418,7 +385,7 @@
 
             //}
             /*else {*/
-                jQuery.ajax({
+            jQuery.ajax({
                 url: '@Url.Action("PartAñadir","Home")',
                 type: "POST",
                 data: JSON.stringify({objeto:Participante}),
@@ -468,45 +435,11 @@
             });
         }
 
+//--------------------------------------------------------FIN PARTICIPANTES--------------------------------------------
 
 
-        function GuardarActividad() {
-            var Actividad = {
 
-                ACTI_ID: $("#actiId").val(),
-                ACTI_TIPO: $('#selectActiId option:selected').val(),
-                ACTI_MOTIVO: $("#txtMotivo").val(),
-                ACTI_DESARROLLO: $("#txtDesarrollo").val(),
-
-            }
-
-            // ajax envia objeto Actividad y llama store procedure
-            jQuery.ajax({
-                url: '@Url.Action("ActiAñadir","Home")',
-                type: "POST",
-                data: JSON.stringify({objeto:Actividad}),
-                dataType: "json",
-                contentType: "application/json; charset=utf-8",
-                success: function (data) {
-
-
-                    $("#actiId").val(""),
-                    $("#selectActiId").val("0").change(),
-                    $("#txtMotivo").val(""),
-                    $("#txtDesarrollo").val("")
-                },
-                error: function (error) {
-                    console.log(error)
-
-                },
-                beforeSend: function () {
-
-                },
-            });
-
-            //$('#tabla').DataTable().ajax.reload();
-            //$("#modalParticipantes").modal("hide");
-        }
+//-----------------------------------------------------INICIO COMPROMISOS----------------------------------------------
 
 
         var tablaDataCompromisos;
@@ -577,26 +510,36 @@
             abrirModalCompromisos(data)
         })
 
+
+        var tablaC = $('#tablaParticipantes').DataTable();
         $("#tablaCompromisos tbody").on("click", '.btn-eliminar', function () {
 
-            alert("Borrar")
+            /*alert("Borrar")*/
+            tablaActivoCompromisos = 0;
 
+            var tablaC = $(this).closest("tr");
 
-            //link borrar data table https://datatables.net/reference/api/row().remove()
+            if (tablaActivoCompromisos == 0) {
+                tablaC.remove();
+                tablaC.draw();
+            }
+            else {
+                alert("else")
+            }
+
         })
 
         //GUARDAR COMPROMISOS
         function GuardarCompromisos() {
-            //Crea objeto participante y transpasa datos de textbox
+
             var Compromiso = {
 
-                PART_ID: $("#txtId").val(),
-                PART_RUT: $("#txtTarea").val(),
-                PART_NOMBRE: $("#txtPlazo").val(),
-                PART_FONO: $("#txtResponsable").val(),
+                COMP_ID: $("#txtIdCompromiso").val(),
+                COMP_TAREA: $("#txtTarea").val(),
+                COMP_PLAZO: $("#txtPlazo").val(),
+                COMP_FUNCIONARIO_RESP: $("#txtResponsable").val()
             }
-
-        jQuery.ajax({
+            jQuery.ajax({
                 url: '@Url.Action("CompromisosAñadir","Home")',
                 type: "POST",
                 data: JSON.stringify({objeto:Compromiso}),
@@ -604,12 +547,72 @@
                 contentType: "application/json; charset=utf-8",
                 success: function (data) {
 
+                    if (Compromiso.COMP_ID == 0) {
 
-                    /*$("#txtIdCompromiso").val("0").change(),*/
-                    $("#txtIdCompromiso").val(""),
-                    $("#txtTarea").val(""),
-                    $("#txtPlazo").val(""),
-                    $("#txtResponsable").val("")
+                        if (data.resultado != 0) {
+                            Compromiso.COMP_ID = data.resultado;
+                            tablaDataCompromisos.row.add(Compromiso).draw(false);
+                            $("#modalCompromisos").modal("hide");
+
+                        } else {
+                            $("#mensajeError").text(data.mensaje);
+                            alert(data.mensaje)
+                            $("#mensajeError").show();
+                        }
+
+                    } else {
+
+                        if (data.resultado) {
+
+                            tablaDataCompromisos.row(filaSeleccionadaCompromisos).data(Compromiso).draw(false);
+                            filaSeleccionadaCompromisos = null;
+                            $("#modalCompromisos").modal("hide");
+                            $('#tablaCompromisos').DataTable().ajax.reload();
+
+
+                        } else {
+                            $("#mensajeError").text(data.mensaje);
+                            $("#mensajeError").show();
+                        }
+
+                    }
+                },
+                error: function (error) {
+                    console.log(error)
+
+                },
+                beforeSend: function () {
+
+                },
+            });
+        }
+
+//--------------------------------------------------------FIN COMPROMISOS----------------------------------------------
+
+    function GuardarActividad() {
+            var Actividad = {
+
+                ACTI_ID: $("#actiId").val(),
+                ACTI_TIPO: $('#selectActiId option:selected').val(),
+                ACTI_MOTIVO: $("#txtMotivo").val(),
+                ACTI_DESARROLLO: $("#txtDesarrollo").val(),
+
+            }
+
+            // ajax envia objeto Actividad y llama store procedure
+            jQuery.ajax({
+                url: '@Url.Action("ActiAñadir","Home")',
+                type: "POST",
+                data: JSON.stringify({objeto:Actividad}),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+
+
+                    $("#actiId").val(""),
+                    $("#selectActiId").val("0").change(),
+                    $("#txtMotivo").val(""),
+                    $("#txtDesarrollo").val("")
                 },
                 error: function (error) {
                     console.log(error)
@@ -623,6 +626,8 @@
             //$('#tabla').DataTable().ajax.reload();
             //$("#modalParticipantes").modal("hide");
         }
+
+//------------------------------------------------------INICIO ACTIVIDAD-----------------------------------------------
 
     </script>
 }

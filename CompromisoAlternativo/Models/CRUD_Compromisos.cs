@@ -65,7 +65,6 @@ namespace CompromisoAlternativo.Models
                 {
                     SqlCommand cmd = new SqlCommand("CompromisosAñadir", oconexion);
 
-
                     cmd.Parameters.AddWithValue("@COMP_TAREA", obj.COMP_TAREA);
                     cmd.Parameters.AddWithValue("@COMP_PLAZO", obj.COMP_PLAZO);
                     cmd.Parameters.AddWithValue("@COMP_FUNCIONARIO_RESP", obj.COMP_FUNCIONARIO_RESP);

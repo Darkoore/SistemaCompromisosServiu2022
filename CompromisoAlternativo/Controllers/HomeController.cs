@@ -130,14 +130,14 @@ namespace CompromisoAlternativo.Controllers
 
             resultado = new CN_Compromisos().CompromisosAñadir(objeto, out mensaje);
 
-            //if (objeto.ACTI_ID == 0)
-            //{
-            //    resultado = new CN_Actividad().ActiAñadir(objeto, out mensaje);
-            //}
-            //else
-            //{
-            //    resultado = new CN_Actividad().ActiEditar(objeto, out mensaje);
-            //}
+            if (objeto.COMP_ID == 0)
+            {
+                resultado = new CN_Compromisos().CompromisosAñadir(objeto, out mensaje);
+            }
+            else
+            {
+                resultado = new CN_Compromisos().CompromisosEditar(objeto, out mensaje);
+            }
 
 
             return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
